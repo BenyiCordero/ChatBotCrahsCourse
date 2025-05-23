@@ -1,0 +1,33 @@
+[handleMsg]:  {
+  key: {
+    remoteJid: '5214779083695@s.whatsapp.net',
+    fromMe: false,
+    id: '1C2F92687C50DDD6A44918DFE3072F82',
+    participant: undefined
+  },
+  messageTimestamp: 1748028641,
+  pushName: 'Naomi',
+  broadcast: false,
+  message: Message {
+    audioMessage: AudioMessage {
+      url: 'https://mmg.whatsapp.net/v/t62.7117-24/19454786_1247116226624082_8128537909119936087_n.enc?ccb=11-4&oh=01_Q5Aa1gF4-Ahc6vuj27dY4IyhY0zwJpCRfszFTz2hYZv8YOp3eg&oe=6858288A&_nc_sid=5e03e0&mms3=true',
+      mimetype: 'audio/ogg; codecs=opus',
+      fileSha256: [Uint8Array],
+      fileLength: [Long],
+      seconds: 24,
+      ptt: true,
+      mediaKey: [Uint8Array],
+      fileEncSha256: [Uint8Array],
+      directPath: '/v/t62.7117-24/19454786_1247116226624082_8128537909119936087_n.enc?ccb=11-4&oh=01_Q5Aa1gF4-Ahc6vuj27dY4IyhY0zwJpCRfszFTz2hYZv8YOp3eg&oe=6858288A&_nc_sid=5e03e0',
+      mediaKeyTimestamp: [Long],
+      waveform: [Uint8Array]
+    },
+    messageContextInfo: MessageContextInfo {
+      deviceListMetadata: [DeviceListMetadata],
+      deviceListMetadataVersion: 2,
+      messageSecret: [Uint8Array]
+    }
+  },
+  body: '_event_voice_note__0145d98a-3fd2-40b0-8de5-a2c1987f03a8',
+  from: '5214779083695'
+}
