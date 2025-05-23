@@ -1,70 +1,58 @@
-const { createBot, createProvider, createFlow, addKeyword } = require('@bot-whatsapp/bot')
+const { createBot, createProvider, createFlow, addKeyword, EVENTS } = require('@bot-whatsapp/bot')
 
 const QRPortalWeb = require('@bot-whatsapp/portal')
 const BaileysProvider = require('@bot-whatsapp/provider/baileys')
 const MockAdapter = require('@bot-whatsapp/database/mock')
+const { delay } = require('@whiskeysockets/baileys')
 
-const flowSecundario = addKeyword(['2', 'siguiente']).addAnswer(['📄 Aquí tenemos el flujo secundario'])
 
-const flowDocs = addKeyword(['doc', 'documentacion', 'documentación']).addAnswer(
-    [
-        '📄 Aquí encontras las documentación recuerda que puedes mejorarla',
-        'https://bot-whatsapp.netlify.app/',
-        '\n*2* Para siguiente paso.',
-    ],
-    null,
-    null,
-    [flowSecundario]
-)
 
-const flowTuto = addKeyword(['tutorial', 'tuto']).addAnswer(
-    [
-        '🙌 Aquí encontras un ejemplo rapido',
-        'https://bot-whatsapp.netlify.app/docs/example/',
-        '\n*2* Para siguiente paso.',
-    ],
-    null,
-    null,
-    [flowSecundario]
-)
+const flowWelcome = addKeyword(EVENTS.WELCOME)
+    .addAnswer("Este es el flujo welcome", {
+        delay: 100, //Retraso para que el bot conteste
+        media: "" //Para enviar imagenes 
+    },
+    //ctx es lo que el usuario ingresa y el ctxFn es lo que el bot manda
+        async(ctx, ctxFn) => {
+            if (ctx.body.includes("Casas")){
+                await ctxFn.flowDinamyc("Hola escribiste casas")
+            } else {
+                await ctxFn.flowDinamyc("Hola escribiste otra cosa")
+            }
+            console.log(ctx.body)
+        }) 
 
-const flowGracias = addKeyword(['gracias', 'grac']).addAnswer(
-    [
-        '🚀 Puedes aportar tu granito de arena a este proyecto',
-        '[*opencollective*] https://opencollective.com/bot-whatsapp',
-        '[*buymeacoffee*] https://www.buymeacoffee.com/leifermendez',
-        '[*patreon*] https://www.patreon.com/leifermendez',
-        '\n*2* Para siguiente paso.',
-    ],
-    null,
-    null,
-    [flowSecundario]
-)
-
-const flowDiscord = addKeyword(['discord']).addAnswer(
-    ['🤪 Únete al discord', 'https://link.codigoencasa.com/DISCORD', '\n*2* Para siguiente paso.'],
-    null,
-    null,
-    [flowSecundario]
-)
-
-const flowPrincipal = addKeyword(['hola', 'ole', 'alo'])
-    .addAnswer('🙌 Hola bienvenido a este *Chatbot*')
-    .addAnswer(
-        [
-            'te comparto los siguientes links de interes sobre el proyecto',
-            '👉 *doc* para ver la documentación',
-            '👉 *gracias*  para ver la lista de videos',
-            '👉 *discord* unirte al discord',
-        ],
-        null,
-        null,
-        [flowDocs, flowGracias, flowTuto, flowDiscord]
-    )
+const menuFlow = addKeyword("Menu").addAnswer(
+    "Este es el menu, elige opcion 1,2,3,4,5 o 0",
+    {capture : true},
+    async (ctx, {gotoFlow, fallBack, flowDinamyc}) => {
+        if (!["1", "2", "3","4","5","0"].includes(ctx.body)){
+            return fallBack(
+                "Respuesta no valida, porfavor elige una de las opciones"
+            );
+        }
+        switch (ctx.body){
+            case "1":
+                return await flowDinamyc("menu1");
+            case "2":
+                return await flowDinamyc("menu2");
+            case "3":
+                return await flowDinamyc("menu3");
+            case "4":
+                return await flowDinamyc("menu4");
+            case "5":
+                return await flowDinamyc("menu5");
+            case "0":
+                return await flowDinamyc(
+                    "Saliendo..."
+                );
+        }
+    }
+);
 
 const main = async () => {
     const adapterDB = new MockAdapter()
-    const adapterFlow = createFlow([flowPrincipal])
+    const adapterFlow = createFlow([flowWelcome, menuFlow])
     const adapterProvider = createProvider(BaileysProvider)
 
     createBot({
